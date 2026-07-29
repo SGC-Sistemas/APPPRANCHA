@@ -1,0 +1,787 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Prancha — Segura Firme</title>
+<style>
+  :root {
+    --bg: #1E2023;
+    --panel: #26292D;
+    --panel-edge: #34383D;
+    --ink: #F2EFE9;
+    --ink-dim: #94989B;
+    --ember: #FF5A36;
+    --ember-dim: #8C3620;
+    --chalk: #F2C230;
+    --success: #5FD068;
+  }
+
+  * { box-sizing: border-box; }
+
+  html, body {
+    margin: 0;
+    padding: 0;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    height: 100%;
+  }
+
+  body {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    padding: 24px;
+  }
+
+  .app {
+    width: 100%;
+    max-width: 420px;
+    background: var(--panel);
+    border: 1px solid var(--panel-edge);
+    border-radius: 14px;
+    padding: 32px 28px 28px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .app::before {
+    content: "";
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, var(--ember), var(--chalk));
+  }
+
+  .eyebrow {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-bottom: 28px;
+  }
+
+  .eyebrow h1 {
+    font-size: 13px;
+    font-weight: 800;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    margin: 0;
+    color: var(--ink);
+  }
+
+  .best {
+    font-size: 11px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--ink-dim);
+    text-align: right;
+  }
+
+  .best strong {
+    display: block;
+    font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+    font-size: 15px;
+    color: var(--chalk);
+    letter-spacing: 0;
+    margin-top: 2px;
+  }
+
+  .goal-row {
+    margin-bottom: 20px;
+    transition: opacity 0.2s ease;
+  }
+
+  .goal-row.disabled {
+    opacity: 0.45;
+    pointer-events: none;
+  }
+
+  .goal-label {
+    font-size: 10px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--ink-dim);
+    margin-bottom: 8px;
+  }
+
+  .chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-bottom: 8px;
+  }
+
+  .chip {
+    font-family: inherit;
+    border: 1px solid var(--panel-edge);
+    background: transparent;
+    color: var(--ink-dim);
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    padding: 7px 12px;
+    border-radius: 7px;
+    cursor: pointer;
+    transition: all 0.15s ease;
+  }
+
+  .chip:hover { color: var(--ink); border-color: var(--ink-dim); }
+
+  .chip.active {
+    background: var(--ember);
+    border-color: var(--ember);
+    color: #1A1200;
+  }
+
+  .custom-goal input {
+    width: 100%;
+    font-family: inherit;
+    background: var(--bg);
+    border: 1px solid var(--panel-edge);
+    color: var(--ink);
+    font-size: 13px;
+    padding: 9px 12px;
+    border-radius: 7px;
+    outline: none;
+  }
+
+  .custom-goal input:focus { border-color: var(--ink-dim); }
+
+  .custom-goal input::placeholder { color: var(--ink-dim); }
+
+  .ring-wrap {
+    position: relative;
+    width: 240px;
+    height: 240px;
+    margin: 0 auto 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .ring-wrap.goal-hit .ring-fg { stroke: var(--success); }
+
+  .ring-wrap.goal-hit::after {
+    content: "";
+    position: absolute;
+    inset: -4px;
+    border-radius: 50%;
+    box-shadow: 0 0 0 0 rgba(95, 208, 104, 0.55);
+    animation: pulseOutGoal 0.9s ease-out;
+  }
+
+  @keyframes pulseOutGoal {
+    0%   { box-shadow: 0 0 0 0 rgba(95, 208, 104, 0.55); }
+    100% { box-shadow: 0 0 0 26px rgba(95, 208, 104, 0); }
+  }
+
+  svg.ring { position: absolute; top: 0; left: 0; transform: rotate(-90deg); }
+
+  .ring-bg {
+    fill: none;
+    stroke: var(--panel-edge);
+    stroke-width: 6;
+  }
+
+  .ring-fg {
+    fill: none;
+    stroke: var(--ember);
+    stroke-width: 6;
+    stroke-linecap: round;
+    transition: stroke 0.3s ease;
+  }
+
+  .ring-tick {
+    fill: var(--ink-dim);
+    transform: rotate(90deg);
+    transform-origin: 120px 120px;
+  }
+
+  .ring-wrap.pulse .ring-fg {
+    stroke: var(--chalk);
+  }
+
+  .ring-wrap.pulse::after {
+    content: "";
+    position: absolute;
+    inset: -4px;
+    border-radius: 50%;
+    box-shadow: 0 0 0 0 rgba(242, 194, 48, 0.5);
+    animation: pulseOut 0.6s ease-out;
+  }
+
+  @keyframes pulseOut {
+    0%   { box-shadow: 0 0 0 0 rgba(242, 194, 48, 0.45); }
+    100% { box-shadow: 0 0 0 18px rgba(242, 194, 48, 0); }
+  }
+
+  .time {
+    position: relative;
+    z-index: 1;
+    text-align: center;
+  }
+
+  .time .digits {
+    font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+    font-size: 44px;
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+    letter-spacing: 1px;
+  }
+
+  .time .label {
+    font-size: 10px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--ink-dim);
+    margin-top: 4px;
+  }
+
+  .phrase-box {
+    min-height: 54px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 0 8px;
+    margin-bottom: 24px;
+  }
+
+  .phrase {
+    font-size: 17px;
+    font-weight: 600;
+    line-height: 1.35;
+    color: var(--ink);
+    opacity: 0;
+    transform: translateY(4px);
+    transition: opacity 0.35s ease, transform 0.35s ease;
+  }
+
+  .phrase.show {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .controls {
+    display: flex;
+    gap: 10px;
+  }
+
+  button {
+    font-family: inherit;
+    border: none;
+    cursor: pointer;
+    border-radius: 9px;
+    font-weight: 800;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    font-size: 13px;
+    padding: 14px 10px;
+    transition: filter 0.15s ease, transform 0.1s ease;
+  }
+
+  button:active { transform: scale(0.97); }
+
+  .btn-primary {
+    flex: 2;
+    background: var(--ember);
+    color: #1A1200;
+  }
+
+  .btn-primary:hover { filter: brightness(1.08); }
+
+  .btn-secondary {
+    flex: 1;
+    background: transparent;
+    border: 1px solid var(--panel-edge);
+    color: var(--ink-dim);
+  }
+
+  .btn-secondary:hover { color: var(--ink); border-color: var(--ink-dim); }
+
+  .btn-mute {
+    flex: 0 0 auto;
+    width: 48px;
+    background: transparent;
+    border: 1px solid var(--panel-edge);
+    color: var(--ink-dim);
+    font-size: 16px;
+    padding: 14px 0;
+  }
+
+  .btn-mute:hover { color: var(--ink); border-color: var(--ink-dim); }
+
+  .record-flash {
+    text-align: center;
+    font-size: 11px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--success);
+    margin-top: 14px;
+    height: 14px;
+    opacity: 0;
+    transition: opacity 0.4s ease;
+  }
+
+  .record-flash.show { opacity: 1; }
+
+  .goal-flash {
+    text-align: center;
+    font-size: 13px;
+    font-weight: 800;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--success);
+    margin-top: 6px;
+    height: 18px;
+    opacity: 0;
+    transition: opacity 0.4s ease;
+  }
+
+  .goal-flash.show { opacity: 1; }
+
+  .voice-row {
+    margin-top: 20px;
+    padding-top: 18px;
+    border-top: 1px solid var(--panel-edge);
+  }
+
+  .voice-controls {
+    display: flex;
+    gap: 8px;
+  }
+
+  .voice-controls select {
+    flex: 1;
+    font-family: inherit;
+    background: var(--bg);
+    border: 1px solid var(--panel-edge);
+    color: var(--ink);
+    font-size: 13px;
+    padding: 9px 10px;
+    border-radius: 7px;
+    outline: none;
+    max-width: 100%;
+  }
+
+  .voice-controls select:focus { border-color: var(--ink-dim); }
+
+  .btn-test {
+    font-family: inherit;
+    border: 1px solid var(--panel-edge);
+    background: transparent;
+    color: var(--ink-dim);
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    padding: 9px 14px;
+    border-radius: 7px;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: all 0.15s ease;
+  }
+
+  .btn-test:hover { color: var(--ink); border-color: var(--ink-dim); }
+
+  @media (prefers-reduced-motion: reduce) {
+    .ring-fg, .phrase, button, .record-flash { transition: none !important; }
+    .ring-wrap.pulse::after { animation: none !important; }
+  }
+</style>
+</head>
+<body>
+
+<div class="app">
+  <div class="eyebrow">
+    <h1>Prancha</h1>
+    <div class="best">Recorde<strong id="bestTime">00:00</strong></div>
+  </div>
+
+  <div class="goal-row" id="goalRow">
+    <div class="goal-label">Meta de tempo</div>
+    <div class="chips" id="chips">
+      <button class="chip" data-goal="15">15s</button>
+      <button class="chip" data-goal="20">20s</button>
+      <button class="chip active" data-goal="30">30s</button>
+      <button class="chip" data-goal="45">45s</button>
+      <button class="chip" data-goal="60">60s</button>
+      <button class="chip" data-goal="0">Livre</button>
+    </div>
+    <div class="custom-goal">
+      <input type="number" id="customGoal" min="5" max="600" step="5" placeholder="outro (seg)">
+    </div>
+  </div>
+
+  <div class="ring-wrap" id="ringWrap">
+    <svg class="ring" width="240" height="240" viewBox="0 0 240 240">
+      <circle class="ring-bg" cx="120" cy="120" r="108"></circle>
+      <circle class="ring-fg" id="ringFg" cx="120" cy="120" r="108"
+              stroke-dasharray="678.6" stroke-dashoffset="678.6"></circle>
+    </svg>
+    <div class="time">
+      <div class="digits" id="digits">00:00</div>
+      <div class="label" id="timeLabel">meta: 30s</div>
+    </div>
+  </div>
+
+  <div class="phrase-box">
+    <div class="phrase" id="phrase">Prepara o corpo. Vamos começar.</div>
+  </div>
+
+  <div class="controls">
+    <button class="btn-primary" id="startBtn">Começar</button>
+    <button class="btn-secondary" id="resetBtn">Zerar</button>
+    <button class="btn-mute" id="muteBtn" title="Ativar ou silenciar a voz">🔊</button>
+  </div>
+
+  <div class="record-flash" id="recordFlash">Novo recorde!</div>
+  <div class="goal-flash" id="goalFlash">Meta concluída!</div>
+
+  <div class="voice-row">
+    <div class="goal-label">Voz</div>
+    <div class="voice-controls">
+      <select id="voiceSelect"></select>
+      <button class="btn-test" id="testVoiceBtn">Testar</button>
+    </div>
+  </div>
+</div>
+
+<script>
+(function () {
+  const PHRASES = [
+    "Segura mais um pouco, você consegue!",
+    "Respira fundo e mantém o corpo reto.",
+    "Cada segundo agora é um segundo mais forte depois.",
+    "Não deixa o quadril cair, mantém a linha.",
+    "Você já aguentou até aqui, não para agora.",
+    "Aperta o abdômen e segura firme.",
+    "A dor é temporária, o orgulho é para sempre.",
+    "Foco na respiração, esquece o relógio.",
+    "Falta pouco, dá mais uma força.",
+    "Seu corpo aguenta mais do que sua mente pensa.",
+    "Mantém os ombros alinhados com os cotovelos.",
+    "Isso aqui é construção, não sofrimento.",
+    "Você é mais forte do que ontem.",
+    "Segura essa postura, ela vale a pena.",
+    "Não olha o tempo, olha pra frente.",
+    "Cada prancha te deixa mais perto do seu objetivo.",
+    "O desconforto passa, o resultado fica.",
+    "Tensiona tudo: abdômen, pernas, glúteos.",
+    "Vai, só mais um pouco!",
+    "Você começou, agora termina com orgulho."
+  ];
+
+  const digitsEl = document.getElementById('digits');
+  const phraseEl = document.getElementById('phrase');
+  const startBtn = document.getElementById('startBtn');
+  const resetBtn = document.getElementById('resetBtn');
+  const muteBtn = document.getElementById('muteBtn');
+  const ringFg = document.getElementById('ringFg');
+  const ringWrap = document.getElementById('ringWrap');
+  const bestTimeEl = document.getElementById('bestTime');
+  const recordFlash = document.getElementById('recordFlash');
+  const goalFlash = document.getElementById('goalFlash');
+  const goalRow = document.getElementById('goalRow');
+  const chips = document.getElementById('chips');
+  const customGoalInput = document.getElementById('customGoal');
+  const timeLabel = document.getElementById('timeLabel');
+  const voiceSelect = document.getElementById('voiceSelect');
+  const testVoiceBtn = document.getElementById('testVoiceBtn');
+
+  const FINAL_PHRASES = [
+    "Meta batida! Você segurou firme até o fim.",
+    "Conseguiu! Mais uma meta guardada no seu progresso.",
+    "Isso aí! Você terminou com disciplina.",
+    "Pronto, meta cumprida. Orgulho do início ao fim.",
+    "Fechou! Você aguentou o tempo todo, com força."
+  ];
+
+  const CIRC = 2 * Math.PI * 108;
+  ringFg.setAttribute('stroke-dasharray', CIRC.toFixed(1));
+
+  let running = false;
+  let startedAt = null;
+  let elapsedBeforePause = 0;
+  let intervalId = null;
+  let lastLap = 0;
+  let phraseHistory = [];
+  let muted = false;
+  let bestMs = 0;
+  let goalMs = 30000;
+  let goalReached = false;
+  let selectedVoiceURI = '';
+  let availableVoices = [];
+
+  function formatTime(ms) {
+    const totalSec = Math.floor(ms / 1000);
+    const m = Math.floor(totalSec / 60);
+    const s = totalSec % 60;
+    return String(m).padStart(2, '0') + ':' + String(s).padStart(2, '0');
+  }
+
+  function pickPhrase() {
+    let choices = PHRASES;
+    if (PHRASES.length > 1 && phraseHistory.length) {
+      choices = PHRASES.filter(p => p !== phraseHistory[phraseHistory.length - 1]);
+    }
+    const chosen = choices[Math.floor(Math.random() * choices.length)];
+    phraseHistory = [chosen];
+    return chosen;
+  }
+
+  function showPhrase(text) {
+    phraseEl.classList.remove('show');
+    setTimeout(() => {
+      phraseEl.textContent = text;
+      phraseEl.classList.add('show');
+    }, 180);
+  }
+
+  function speak(text) {
+    if (muted) return;
+    if (!('speechSynthesis' in window)) return;
+    try {
+      window.speechSynthesis.cancel();
+      const utter = new SpeechSynthesisUtterance(text);
+      utter.lang = 'pt-BR';
+      utter.rate = 0.98;
+      utter.pitch = 1.0;
+      const voice = availableVoices.find(v => v.voiceURI === selectedVoiceURI);
+      if (voice) utter.voice = voice;
+      window.speechSynthesis.speak(utter);
+    } catch (e) {
+      console.error('Erro na fala:', e);
+    }
+  }
+
+  function scoreVoice(v) {
+    const name = v.name.toLowerCase();
+    let score = 0;
+    if (v.lang.toLowerCase().startsWith('pt')) score += 10;
+    if (v.lang.toLowerCase() === 'pt-br') score += 4;
+    if (name.includes('natural')) score += 8;
+    if (name.includes('neural')) score += 8;
+    if (name.includes('online')) score += 4;
+    if (name.includes('google')) score += 3;
+    if (name.includes('microsoft')) score += 2;
+    if (!v.localService) score += 2;
+    return score;
+  }
+
+  function populateVoices() {
+    availableVoices = window.speechSynthesis.getVoices();
+    if (!availableVoices.length) return;
+
+    let ptVoices = availableVoices.filter(v => v.lang.toLowerCase().startsWith('pt'));
+    const listForSelect = ptVoices.length ? ptVoices : availableVoices;
+    const sorted = [...listForSelect].sort((a, b) => scoreVoice(b) - scoreVoice(a));
+
+    voiceSelect.innerHTML = '';
+    sorted.forEach(v => {
+      const opt = document.createElement('option');
+      opt.value = v.voiceURI;
+      opt.textContent = v.name + ' (' + v.lang + ')';
+      voiceSelect.appendChild(opt);
+    });
+
+    if (!selectedVoiceURI || !sorted.some(v => v.voiceURI === selectedVoiceURI)) {
+      selectedVoiceURI = sorted[0].voiceURI;
+    }
+    voiceSelect.value = selectedVoiceURI;
+  }
+
+  async function loadSavedVoice() {
+    try {
+      const result = await window.storage.get('plank-voice-uri', false);
+      if (result && result.value) selectedVoiceURI = result.value;
+    } catch (e) {
+      // sem voz salva ainda
+    }
+  }
+
+  async function saveVoice(uri) {
+    try {
+      await window.storage.set('plank-voice-uri', uri, false);
+    } catch (e) {
+      console.error('Não foi possível salvar a voz:', e);
+    }
+  }
+
+  function pulseRing() {
+    ringWrap.classList.remove('pulse');
+    void ringWrap.offsetWidth;
+    ringWrap.classList.add('pulse');
+    setTimeout(() => ringWrap.classList.remove('pulse'), 620);
+  }
+
+  function tick() {
+    const elapsed = elapsedBeforePause + (Date.now() - startedAt);
+    digitsEl.textContent = formatTime(elapsed);
+
+    if (goalMs > 0 && !goalReached && elapsed >= goalMs) {
+      goalReached = true;
+      ringFg.setAttribute('stroke-dashoffset', '0');
+      ringWrap.classList.add('goal-hit');
+      const finalText = FINAL_PHRASES[Math.floor(Math.random() * FINAL_PHRASES.length)];
+      showPhrase(finalText);
+      speak(finalText);
+      goalFlash.classList.add('show');
+      setTimeout(() => goalFlash.classList.remove('show'), 2400);
+      pause();
+      return;
+    }
+
+    if (goalMs > 0) {
+      const progress = Math.min(elapsed / goalMs, 1);
+      ringFg.setAttribute('stroke-dashoffset', (CIRC * (1 - progress)).toFixed(1));
+    } else {
+      const cycleProgress = (elapsed % 10000) / 10000;
+      ringFg.setAttribute('stroke-dashoffset', (CIRC * (1 - cycleProgress)).toFixed(1));
+    }
+
+    const currentLap = Math.floor(elapsed / 10000);
+    if (currentLap > lastLap) {
+      lastLap = currentLap;
+      const text = pickPhrase();
+      showPhrase(text);
+      speak(text);
+      pulseRing();
+    }
+  }
+
+  function start() {
+    running = true;
+    startedAt = Date.now();
+    startBtn.textContent = 'Pausar';
+    goalRow.classList.add('disabled');
+    intervalId = setInterval(tick, 100);
+    if (elapsedBeforePause === 0) {
+      const first = pickPhrase();
+      showPhrase(first);
+      speak(first);
+    }
+  }
+
+  function pause() {
+    running = false;
+    clearInterval(intervalId);
+    elapsedBeforePause += Date.now() - startedAt;
+    startBtn.textContent = 'Continuar';
+    goalRow.classList.remove('disabled');
+    checkBest(elapsedBeforePause);
+  }
+
+  function reset() {
+    running = false;
+    clearInterval(intervalId);
+    checkBest(elapsedBeforePause + (startedAt ? Date.now() - startedAt : 0));
+    elapsedBeforePause = 0;
+    startedAt = null;
+    lastLap = 0;
+    goalReached = false;
+    ringWrap.classList.remove('goal-hit');
+    goalRow.classList.remove('disabled');
+    digitsEl.textContent = '00:00';
+    ringFg.setAttribute('stroke-dashoffset', CIRC.toFixed(1));
+    startBtn.textContent = 'Começar';
+    showPhrase('Prepara o corpo. Vamos começar.');
+    window.speechSynthesis && window.speechSynthesis.cancel();
+  }
+
+  async function checkBest(ms) {
+    if (ms <= bestMs) return;
+    bestMs = ms;
+    bestTimeEl.textContent = formatTime(bestMs);
+    recordFlash.classList.add('show');
+    setTimeout(() => recordFlash.classList.remove('show'), 1800);
+    try {
+      await window.storage.set('plank-best-ms', String(bestMs), false);
+    } catch (e) {
+      console.error('Não foi possível salvar o recorde:', e);
+    }
+  }
+
+  async function loadBest() {
+    try {
+      const result = await window.storage.get('plank-best-ms', false);
+      if (result && result.value) {
+        bestMs = parseInt(result.value, 10) || 0;
+        bestTimeEl.textContent = formatTime(bestMs);
+      }
+    } catch (e) {
+      // sem recorde salvo ainda
+    }
+  }
+
+  function updateTimeLabel() {
+    timeLabel.textContent = goalMs > 0 ? ('meta: ' + Math.round(goalMs / 1000) + 's') : 'tempo livre';
+  }
+
+  function applyGoal(seconds) {
+    goalMs = seconds > 0 ? seconds * 1000 : 0;
+    goalReached = false;
+    ringWrap.classList.remove('goal-hit');
+    updateTimeLabel();
+    if (!running && elapsedBeforePause === 0) {
+      ringFg.setAttribute('stroke-dashoffset', CIRC.toFixed(1));
+    }
+  }
+
+  chips.addEventListener('click', (e) => {
+    const btn = e.target.closest('.chip');
+    if (!btn) return;
+    [...chips.querySelectorAll('.chip')].forEach(c => c.classList.remove('active'));
+    btn.classList.add('active');
+    customGoalInput.value = '';
+    applyGoal(parseInt(btn.dataset.goal, 10));
+  });
+
+  customGoalInput.addEventListener('input', () => {
+    const val = parseInt(customGoalInput.value, 10);
+    if (!val || val <= 0) return;
+    [...chips.querySelectorAll('.chip')].forEach(c => c.classList.remove('active'));
+    applyGoal(val);
+  });
+
+  updateTimeLabel();
+
+  startBtn.addEventListener('click', () => {
+    if (!running) {
+      start();
+    } else {
+      pause(); 
+    }
+  });
+
+  resetBtn.addEventListener('click', reset);
+
+  muteBtn.addEventListener('click', () => {
+    muted = !muted;
+    muteBtn.textContent = muted ? '🔇' : '🔊';
+    if (muted && 'speechSynthesis' in window) window.speechSynthesis.cancel();
+  });
+
+  voiceSelect.addEventListener('change', () => {
+    selectedVoiceURI = voiceSelect.value;
+    saveVoice(selectedVoiceURI);
+  });
+
+  testVoiceBtn.addEventListener('click', () => {
+    speak('Assim que a minha voz vai soar durante a sua prancha.');
+  });
+
+  if ('speechSynthesis' in window) {
+    window.speechSynthesis.onvoiceschanged = populateVoices;
+  }
+
+  loadBest();
+  loadSavedVoice().then(populateVoices);
+  populateVoices();
+})();
+</script>
+
+</body>
+</html>
