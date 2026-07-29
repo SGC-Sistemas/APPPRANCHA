@@ -3,17 +3,17 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Prancha — Segura Firme</title>
+<title>APP CJD</title>
 <style>
   :root {
-    --bg: #1E2023;
-    --panel: #26292D;
-    --panel-edge: #34383D;
+    --bg: #06172f;
+    --panel: #0b2447;
+    --panel-edge: #1e4f8a;
     --ink: #F2EFE9;
-    --ink-dim: #94989B; 
-    --ember: #FF5A36;
-    --ember-dim: #8C3620;
-    --chalk: #F2C230;
+    --ink-dim: #94989B;
+    --ember: #1e90ff;
+    --ember-dim: #1565c0;
+    --chalk: #63b3ff;
     --success: #5FD068;
   }
 
@@ -52,7 +52,7 @@
     position: absolute;
     top: 0; left: 0; right: 0;
     height: 3px;
-    background: linear-gradient(90deg, var(--ember), var(--chalk));
+    background: linear-gradient(90deg,#0d6efd,#66b3ff);
   }
 
   .eyebrow {
@@ -396,8 +396,8 @@
 
 <div class="app">
   <div class="eyebrow">
-    <h1>Prancha</h1>
-    <div class="best">Recorde<strong id="bestTime">00:00</strong></div>
+    <h1>APP CJD</h1>
+    <div class="best">Melhor Tempo<strong id="bestTime">00:00</strong></div>
   </div>
 
   <div class="goal-row" id="goalRow">
@@ -752,7 +752,7 @@
     if (!running) {
       start();
     } else {
-      pause(); 
+      pause();
     }
   });
 
