@@ -3,18 +3,18 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>APP CJD</title>
+<title>Prancha — Segura Firme</title>
 <style>
   :root {
-    --bg: #06172f;
-    --panel: #0b2447;
-    --panel-edge: #1e4f8a;
-    --ink: #F2EFE9;
-    --ink-dim: #94989B;
-    --ember: #1e90ff;
-    --ember-dim: #1565c0;
-    --chalk: #63b3ff;
-    --success: #5FD068;
+    --bg: #EAF4FC;
+    --panel: #FFFFFF;
+    --panel-edge: #CFE4F5;
+    --ink: #0B3A5C;
+    --ink-dim: #6D93B3;
+    --ember: #1E9FDB;
+    --ember-dim: #0B6FA6;
+    --chalk: #6FD0FF;
+    --success: #0B6FA6;
   }
 
   * { box-sizing: border-box; }
@@ -52,7 +52,7 @@
     position: absolute;
     top: 0; left: 0; right: 0;
     height: 3px;
-    background: linear-gradient(90deg,#0d6efd,#66b3ff);
+    background: linear-gradient(90deg, var(--ember), var(--chalk));
   }
 
   .eyebrow {
@@ -132,7 +132,7 @@
   .chip.active {
     background: var(--ember);
     border-color: var(--ember);
-    color: #1A1200;
+    color: #FFFFFF;
   }
 
   .custom-goal input {
@@ -168,13 +168,13 @@
     position: absolute;
     inset: -4px;
     border-radius: 50%;
-    box-shadow: 0 0 0 0 rgba(95, 208, 104, 0.55);
+    box-shadow: 0 0 0 0 rgba(11, 111, 166, 0.55);
     animation: pulseOutGoal 0.9s ease-out;
   }
 
   @keyframes pulseOutGoal {
-    0%   { box-shadow: 0 0 0 0 rgba(95, 208, 104, 0.55); }
-    100% { box-shadow: 0 0 0 26px rgba(95, 208, 104, 0); }
+    0%   { box-shadow: 0 0 0 0 rgba(11, 111, 166, 0.55); }
+    100% { box-shadow: 0 0 0 26px rgba(11, 111, 166, 0); }
   }
 
   svg.ring { position: absolute; top: 0; left: 0; transform: rotate(-90deg); }
@@ -208,13 +208,13 @@
     position: absolute;
     inset: -4px;
     border-radius: 50%;
-    box-shadow: 0 0 0 0 rgba(242, 194, 48, 0.5);
+    box-shadow: 0 0 0 0 rgba(111, 208, 255, 0.6);
     animation: pulseOut 0.6s ease-out;
   }
 
   @keyframes pulseOut {
-    0%   { box-shadow: 0 0 0 0 rgba(242, 194, 48, 0.45); }
-    100% { box-shadow: 0 0 0 18px rgba(242, 194, 48, 0); }
+    0%   { box-shadow: 0 0 0 0 rgba(111, 208, 255, 0.55); }
+    100% { box-shadow: 0 0 0 18px rgba(111, 208, 255, 0); }
   }
 
   .time {
@@ -237,31 +237,6 @@
     text-transform: uppercase;
     color: var(--ink-dim);
     margin-top: 4px;
-  }
-
-  .phrase-box {
-    min-height: 54px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-    padding: 0 8px;
-    margin-bottom: 24px;
-  }
-
-  .phrase {
-    font-size: 17px;
-    font-weight: 600;
-    line-height: 1.35;
-    color: var(--ink);
-    opacity: 0;
-    transform: translateY(4px);
-    transition: opacity 0.35s ease, transform 0.35s ease;
-  }
-
-  .phrase.show {
-    opacity: 1;
-    transform: translateY(0);
   }
 
   .controls {
@@ -287,7 +262,7 @@
   .btn-primary {
     flex: 2;
     background: var(--ember);
-    color: #1A1200;
+    color: #FFFFFF;
   }
 
   .btn-primary:hover { filter: brightness(1.08); }
@@ -342,52 +317,8 @@
 
   .goal-flash.show { opacity: 1; }
 
-  .voice-row {
-    margin-top: 20px;
-    padding-top: 18px;
-    border-top: 1px solid var(--panel-edge);
-  }
-
-  .voice-controls {
-    display: flex;
-    gap: 8px;
-  }
-
-  .voice-controls select {
-    flex: 1;
-    font-family: inherit;
-    background: var(--bg);
-    border: 1px solid var(--panel-edge);
-    color: var(--ink);
-    font-size: 13px;
-    padding: 9px 10px;
-    border-radius: 7px;
-    outline: none;
-    max-width: 100%;
-  }
-
-  .voice-controls select:focus { border-color: var(--ink-dim); }
-
-  .btn-test {
-    font-family: inherit;
-    border: 1px solid var(--panel-edge);
-    background: transparent;
-    color: var(--ink-dim);
-    font-size: 12px;
-    font-weight: 700;
-    letter-spacing: 0.5px;
-    text-transform: uppercase;
-    padding: 9px 14px;
-    border-radius: 7px;
-    cursor: pointer;
-    white-space: nowrap;
-    transition: all 0.15s ease;
-  }
-
-  .btn-test:hover { color: var(--ink); border-color: var(--ink-dim); }
-
   @media (prefers-reduced-motion: reduce) {
-    .ring-fg, .phrase, button, .record-flash { transition: none !important; }
+    .ring-fg, button, .record-flash { transition: none !important; }
     .ring-wrap.pulse::after { animation: none !important; }
   }
 </style>
@@ -396,8 +327,8 @@
 
 <div class="app">
   <div class="eyebrow">
-    <h1>APP CJD</h1>
-    <div class="best">Melhor Tempo<strong id="bestTime">00:00</strong></div>
+    <h1>Prancha</h1>
+    <div class="best">Recorde<strong id="bestTime">00:00</strong></div>
   </div>
 
   <div class="goal-row" id="goalRow">
@@ -427,10 +358,6 @@
     </div>
   </div>
 
-  <div class="phrase-box">
-    <div class="phrase" id="phrase">Prepara o corpo. Vamos começar.</div>
-  </div>
-
   <div class="controls">
     <button class="btn-primary" id="startBtn">Começar</button>
     <button class="btn-secondary" id="resetBtn">Zerar</button>
@@ -439,43 +366,11 @@
 
   <div class="record-flash" id="recordFlash">Novo recorde!</div>
   <div class="goal-flash" id="goalFlash">Meta concluída!</div>
-
-  <div class="voice-row">
-    <div class="goal-label">Voz</div>
-    <div class="voice-controls">
-      <select id="voiceSelect"></select>
-      <button class="btn-test" id="testVoiceBtn">Testar</button>
-    </div>
-  </div>
 </div>
 
 <script>
 (function () {
-  const PHRASES = [
-    "Segura mais um pouco, você consegue!",
-    "Respira fundo e mantém o corpo reto.",
-    "Cada segundo agora é um segundo mais forte depois.",
-    "Não deixa o quadril cair, mantém a linha.",
-    "Você já aguentou até aqui, não para agora.",
-    "Aperta o abdômen e segura firme.",
-    "A dor é temporária, o orgulho é para sempre.",
-    "Foco na respiração, esquece o relógio.",
-    "Falta pouco, dá mais uma força.",
-    "Seu corpo aguenta mais do que sua mente pensa.",
-    "Mantém os ombros alinhados com os cotovelos.",
-    "Isso aqui é construção, não sofrimento.",
-    "Você é mais forte do que ontem.",
-    "Segura essa postura, ela vale a pena.",
-    "Não olha o tempo, olha pra frente.",
-    "Cada prancha te deixa mais perto do seu objetivo.",
-    "O desconforto passa, o resultado fica.",
-    "Tensiona tudo: abdômen, pernas, glúteos.",
-    "Vai, só mais um pouco!",
-    "Você começou, agora termina com orgulho."
-  ];
-
   const digitsEl = document.getElementById('digits');
-  const phraseEl = document.getElementById('phrase');
   const startBtn = document.getElementById('startBtn');
   const resetBtn = document.getElementById('resetBtn');
   const muteBtn = document.getElementById('muteBtn');
@@ -488,16 +383,6 @@
   const chips = document.getElementById('chips');
   const customGoalInput = document.getElementById('customGoal');
   const timeLabel = document.getElementById('timeLabel');
-  const voiceSelect = document.getElementById('voiceSelect');
-  const testVoiceBtn = document.getElementById('testVoiceBtn');
-
-  const FINAL_PHRASES = [
-    "Meta batida! Você segurou firme até o fim.",
-    "Conseguiu! Mais uma meta guardada no seu progresso.",
-    "Isso aí! Você terminou com disciplina.",
-    "Pronto, meta cumprida. Orgulho do início ao fim.",
-    "Fechou! Você aguentou o tempo todo, com força."
-  ];
 
   const CIRC = 2 * Math.PI * 108;
   ringFg.setAttribute('stroke-dasharray', CIRC.toFixed(1));
@@ -506,108 +391,16 @@
   let startedAt = null;
   let elapsedBeforePause = 0;
   let intervalId = null;
-  let lastLap = 0;
-  let phraseHistory = [];
   let muted = false;
   let bestMs = 0;
   let goalMs = 30000;
   let goalReached = false;
-  let selectedVoiceURI = '';
-  let availableVoices = [];
 
   function formatTime(ms) {
     const totalSec = Math.floor(ms / 1000);
     const m = Math.floor(totalSec / 60);
     const s = totalSec % 60;
     return String(m).padStart(2, '0') + ':' + String(s).padStart(2, '0');
-  }
-
-  function pickPhrase() {
-    let choices = PHRASES;
-    if (PHRASES.length > 1 && phraseHistory.length) {
-      choices = PHRASES.filter(p => p !== phraseHistory[phraseHistory.length - 1]);
-    }
-    const chosen = choices[Math.floor(Math.random() * choices.length)];
-    phraseHistory = [chosen];
-    return chosen;
-  }
-
-  function showPhrase(text) {
-    phraseEl.classList.remove('show');
-    setTimeout(() => {
-      phraseEl.textContent = text;
-      phraseEl.classList.add('show');
-    }, 180);
-  }
-
-  function speak(text) {
-    if (muted) return;
-    if (!('speechSynthesis' in window)) return;
-    try {
-      window.speechSynthesis.cancel();
-      const utter = new SpeechSynthesisUtterance(text);
-      utter.lang = 'pt-BR';
-      utter.rate = 0.98;
-      utter.pitch = 1.0;
-      const voice = availableVoices.find(v => v.voiceURI === selectedVoiceURI);
-      if (voice) utter.voice = voice;
-      window.speechSynthesis.speak(utter);
-    } catch (e) {
-      console.error('Erro na fala:', e);
-    }
-  }
-
-  function scoreVoice(v) {
-    const name = v.name.toLowerCase();
-    let score = 0;
-    if (v.lang.toLowerCase().startsWith('pt')) score += 10;
-    if (v.lang.toLowerCase() === 'pt-br') score += 4;
-    if (name.includes('natural')) score += 8;
-    if (name.includes('neural')) score += 8;
-    if (name.includes('online')) score += 4;
-    if (name.includes('google')) score += 3;
-    if (name.includes('microsoft')) score += 2;
-    if (!v.localService) score += 2;
-    return score;
-  }
-
-  function populateVoices() {
-    availableVoices = window.speechSynthesis.getVoices();
-    if (!availableVoices.length) return;
-
-    let ptVoices = availableVoices.filter(v => v.lang.toLowerCase().startsWith('pt'));
-    const listForSelect = ptVoices.length ? ptVoices : availableVoices;
-    const sorted = [...listForSelect].sort((a, b) => scoreVoice(b) - scoreVoice(a));
-
-    voiceSelect.innerHTML = '';
-    sorted.forEach(v => {
-      const opt = document.createElement('option');
-      opt.value = v.voiceURI;
-      opt.textContent = v.name + ' (' + v.lang + ')';
-      voiceSelect.appendChild(opt);
-    });
-
-    if (!selectedVoiceURI || !sorted.some(v => v.voiceURI === selectedVoiceURI)) {
-      selectedVoiceURI = sorted[0].voiceURI;
-    }
-    voiceSelect.value = selectedVoiceURI;
-  }
-
-  async function loadSavedVoice() {
-    try {
-      const result = await window.storage.get('plank-voice-uri', false);
-      if (result && result.value) selectedVoiceURI = result.value;
-    } catch (e) {
-      // sem voz salva ainda
-    }
-  }
-
-  async function saveVoice(uri) {
-    try {
-      await window.storage.set('plank-voice-uri', uri, false);
-    } catch (e) {
-      console.error('Não foi possível salvar a voz:', e);
-    }
   }
 
   function pulseRing() {
@@ -617,17 +410,94 @@
     setTimeout(() => ringWrap.classList.remove('pulse'), 620);
   }
 
+  let audioCtx = null;
+  let beatTimeoutId = null;
+  let lastBeatInterval = null;
+  const BEAT_START_INTERVAL = 1500;
+  const BEAT_MID_INTERVAL = 500;
+  const BEAT_END_INTERVAL = 70;
+  const FINAL_WINDOW_MS = 14000;
+  const CURVE_POWER_EARLY = 1.3;
+  const CURVE_POWER_LATE = 2.5;
+  const FREE_MODE_INTERVAL = 750;
+
+  function ensureAudioCtx() {
+    if (!audioCtx) {
+      const AC = window.AudioContext || window.webkitAudioContext;
+      if (AC) audioCtx = new AC();
+    }
+    if (audioCtx && audioCtx.state === 'suspended') {
+      audioCtx.resume();
+    }
+  }
+
+  function playBeat(progress) {
+    if (muted || !audioCtx) return;
+    const t = audioCtx.currentTime;
+    const osc = audioCtx.createOscillator();
+    const gain = audioCtx.createGain();
+    osc.type = 'sine';
+    osc.frequency.setValueAtTime(420 + progress * 420, t);
+    gain.gain.setValueAtTime(0.0001, t);
+    gain.gain.exponentialRampToValueAtTime(0.35, t + 0.015);
+    gain.gain.exponentialRampToValueAtTime(0.0001, t + 0.13);
+    osc.connect(gain);
+    gain.connect(audioCtx.destination);
+    osc.start(t);
+    osc.stop(t + 0.15);
+  }
+
+  function scheduleNextBeat() {
+    if (!running) return;
+    const elapsed = elapsedBeforePause + (Date.now() - startedAt);
+
+    let baseInterval;
+    let pitchProgress;
+
+    if (goalMs > 0) {
+      const remaining = Math.max(goalMs - elapsed, 0);
+      pitchProgress = Math.min(elapsed / goalMs, 1);
+
+      if (remaining > FINAL_WINDOW_MS) {
+        const rampDuration = Math.max(goalMs - FINAL_WINDOW_MS, 1);
+        const p = Math.min(elapsed / rampDuration, 1);
+        baseInterval = BEAT_START_INTERVAL - (BEAT_START_INTERVAL - BEAT_MID_INTERVAL) * Math.pow(p, CURVE_POWER_EARLY);
+      } else {
+        const p2 = (FINAL_WINDOW_MS - remaining) / FINAL_WINDOW_MS;
+        baseInterval = BEAT_MID_INTERVAL - (BEAT_MID_INTERVAL - BEAT_END_INTERVAL) * Math.pow(p2, CURVE_POWER_LATE);
+      }
+    } else {
+      baseInterval = FREE_MODE_INTERVAL;
+      pitchProgress = 0;
+    }
+
+    let interval = baseInterval;
+    if (goalMs > 0 && lastBeatInterval !== null && interval >= lastBeatInterval) {
+      interval = lastBeatInterval - 1;
+    }
+    interval = Math.max(interval, BEAT_END_INTERVAL - 20);
+    lastBeatInterval = interval;
+
+    playBeat(pitchProgress);
+    pulseRing();
+    beatTimeoutId = setTimeout(scheduleNextBeat, interval);
+  }
+
+  function stopBeat() {
+    clearTimeout(beatTimeoutId);
+    beatTimeoutId = null;
+    lastBeatInterval = null;
+  }
+
   function tick() {
     const elapsed = elapsedBeforePause + (Date.now() - startedAt);
     digitsEl.textContent = formatTime(elapsed);
 
     if (goalMs > 0 && !goalReached && elapsed >= goalMs) {
       goalReached = true;
+      stopBeat();
       ringFg.setAttribute('stroke-dashoffset', '0');
       ringWrap.classList.add('goal-hit');
-      const finalText = FINAL_PHRASES[Math.floor(Math.random() * FINAL_PHRASES.length)];
-      showPhrase(finalText);
-      speak(finalText);
       goalFlash.classList.add('show');
       setTimeout(() => goalFlash.classList.remove('show'), 2400);
       pause();
@@ -641,15 +511,6 @@
       const cycleProgress = (elapsed % 10000) / 10000;
       ringFg.setAttribute('stroke-dashoffset', (CIRC * (1 - cycleProgress)).toFixed(1));
     }
-
-    const currentLap = Math.floor(elapsed / 10000);
-    if (currentLap > lastLap) {
-      lastLap = currentLap;
-      const text = pickPhrase();
-      showPhrase(text);
-      speak(text);
-      pulseRing();
-    }
   }
 
   function start() {
@@ -658,16 +519,14 @@
     startBtn.textContent = 'Pausar';
     goalRow.classList.add('disabled');
     intervalId = setInterval(tick, 100);
-    if (elapsedBeforePause === 0) {
-      const first = pickPhrase();
-      showPhrase(first);
-      speak(first);
-    }
+    ensureAudioCtx();
+    scheduleNextBeat();
   }
 
   function pause() {
     running = false;
     clearInterval(intervalId);
+    stopBeat();
     elapsedBeforePause += Date.now() - startedAt;
     startBtn.textContent = 'Continuar';
     goalRow.classList.remove('disabled');
@@ -677,17 +536,16 @@
   function reset() {
     running = false;
     clearInterval(intervalId);
+    stopBeat();
     checkBest(elapsedBeforePause + (startedAt ? Date.now() - startedAt : 0));
     elapsedBeforePause = 0;
     startedAt = null;
-    lastLap = 0;
     goalReached = false;
     ringWrap.classList.remove('goal-hit');
     goalRow.classList.remove('disabled');
     digitsEl.textContent = '00:00';
     ringFg.setAttribute('stroke-dashoffset', CIRC.toFixed(1));
     startBtn.textContent = 'Começar';
-    showPhrase('Prepara o corpo. Vamos começar.');
     window.speechSynthesis && window.speechSynthesis.cancel();
   }
 
@@ -763,23 +621,9 @@
     muteBtn.textContent = muted ? '🔇' : '🔊';
     if (muted && 'speechSynthesis' in window) window.speechSynthesis.cancel();
   });
-
-  voiceSelect.addEventListener('change', () => {
-    selectedVoiceURI = voiceSelect.value;
-    saveVoice(selectedVoiceURI);
-  });
-
-  testVoiceBtn.addEventListener('click', () => {
-    speak('Assim que a minha voz vai soar durante a sua prancha.');
-  });
-
-  if ('speechSynthesis' in window) {
-    window.speechSynthesis.onvoiceschanged = populateVoices;
-  }
+  // A batida sonora (playBeat) já verifica a variável "muted" a cada disparo.
 
   loadBest();
-  loadSavedVoice().then(populateVoices);
-  populateVoices();
 })();
 </script>
 
